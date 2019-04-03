@@ -1,12 +1,12 @@
 
 package com.netshell.webcrawler;
 
-import com.netshell.webcrawler.exception.PageNotFoundException;
+import com.netshell.webcrawler.model.Page;
 
-import java.util.Collection;
+import java.util.Optional;
 
 public interface LinkParser {
 
-    Collection<String> getLinks(String pageAddress) throws PageNotFoundException;
+    Optional<Page> parse(String pageAddress);
 
 }

@@ -3,14 +3,12 @@ package com.netshell.webcrawler;
 
 import com.netshell.webcrawler.exception.DuplicatePageException;
 import com.netshell.webcrawler.exception.PageNotFoundException;
+import com.netshell.webcrawler.model.Page;
 import com.netshell.webcrawler.repository.PageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.RecursiveAction;
 import java.util.stream.Collectors;
 
@@ -45,7 +43,14 @@ public class CrawlerAction extends RecursiveAction {
         }
 
         try {
-            final Collection<String> links = parser.getLinks(pageAddress);
+            final Optional<Page> page = parser.parse(pageAddress);
+            if (!page.isPresent()) {
+                LOGGER.error("Page Not Found: {}", pageAddress);
+                pageRepository.addErroredPage(pageAddress);
+                return;
+            }
+
+            final List<String> links = page.get().getLinks();
             final List<CrawlerAction> actions = links.stream()
                     .map(p -> new CrawlerAction(pageRepository, parser, p))
                     .collect(Collectors.toList());
@@ -58,9 +63,9 @@ public class CrawlerAction extends RecursiveAction {
                 pageRepository.addPage(pageAddress);
             }
             invokeAll(actions);
-        } catch (PageNotFoundException | DuplicatePageException e) {
+        } catch (DuplicatePageException e) {
             LOGGER.error("Not able to process page: {}-{}", e.getClass().getSimpleName(), e.getMessage());
-            pageRepository.addErroredPage(pageAddress);
+            pageRepository.addSkippedPage(pageAddress);
         }
     }
 }
