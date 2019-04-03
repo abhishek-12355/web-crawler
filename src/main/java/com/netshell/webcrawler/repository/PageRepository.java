@@ -5,12 +5,13 @@ import com.netshell.webcrawler.exception.DuplicatePageException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PageRepository {
 
     private final Collection<String> visitedPages = new HashSet<>();
-    private final Collection<String> erroredPages = new HashSet<>();
-    private final Collection<String> skippedPages = new HashSet<>();
+    private final Collection<String> erroredPages = ConcurrentHashMap.newKeySet();
+    private final Collection<String> skippedPages = ConcurrentHashMap.newKeySet();
 
     public Collection<String> getVisitedPages() {
         return Collections.unmodifiableCollection(visitedPages);

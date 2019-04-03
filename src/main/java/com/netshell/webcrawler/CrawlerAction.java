@@ -22,6 +22,8 @@ public class CrawlerAction extends RecursiveAction {
     private final LinkParser parser;
     private final String pageAddress;
 
+    private final Object object = new Object();
+
     CrawlerAction(PageRepository pageRepository, LinkParser parser, String pageAddress) {
         this.pageRepository = Objects.requireNonNull(pageRepository);
         this.parser = Objects.requireNonNull(parser);
@@ -48,7 +50,13 @@ public class CrawlerAction extends RecursiveAction {
                     .map(p -> new CrawlerAction(pageRepository, parser, p))
                     .collect(Collectors.toList());
 
-            pageRepository.addPage(pageAddress);
+            synchronized (object) {
+                if (pageRepository.isPageVisited(pageAddress)) {
+                    pageRepository.addSkippedPage(pageAddress);
+                    return;
+                }
+                pageRepository.addPage(pageAddress);
+            }
             invokeAll(actions);
         } catch (PageNotFoundException | DuplicatePageException e) {
             LOGGER.error("Not able to process page: {}-{}", e.getClass().getSimpleName(), e.getMessage());

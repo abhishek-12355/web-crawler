@@ -35,7 +35,7 @@ public class WebCrawlerTest {
         LOGGER.info("Error: {}", erroredPages.toString());
 
         final List<String> expectedVisitedPages = Arrays.asList("page-99", "page-01", "page-04", "page-05", "page-02", "page-03", "page-08", "page-09", "page-06", "page-07");
-        final List<String> expectedSkippedPages = Arrays.asList("page-01", "page-10", "page-04", "page-05", "page-02", "page-03", "page-08", "page-09");
+        final List<String> expectedSkippedPages = Arrays.asList("page-01", "page-04", "page-05", "page-02", "page-03", "page-08", "page-09");
         final List<String> expectedErroredPages = Arrays.asList("page-11", "page-00", "page-12", "page-10", "page-13");
 
         Assert.assertTrue(compareCollection(expectedVisitedPages, visitedPages));
@@ -56,7 +56,7 @@ public class WebCrawlerTest {
         LOGGER.info("Error: {}", erroredPages.toString());
 
         final List<String> expectedVisitedPages = Arrays.asList("page-96", "page-99", "page-01", "page-97", "page-98", "page-04", "page-05", "page-02", "page-03", "page-08", "page-09", "page-06", "page-07");
-        final List<String> expectedSkippedPages = Arrays.asList("page-99", "page-01", "page-10", "page-04", "page-05", "page-02", "page-03", "page-08", "page-09");
+        final List<String> expectedSkippedPages = Arrays.asList("page-99", "page-01", "page-04", "page-05", "page-02", "page-03", "page-08", "page-09");
         final List<String> expectedErroredPages = Arrays.asList("page-00", "page-11", "page-12", "page-10", "page-13");
 
         Assert.assertTrue(compareCollection(expectedVisitedPages, visitedPages));
